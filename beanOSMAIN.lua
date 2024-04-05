@@ -15,7 +15,7 @@ local appListframeHidden = false
 local appframeHidden = true
 local appcodetable = {}
 
-local VERSION = "0.2 BETA"
+local VERSION = "beanOS beta 0.2"
  
 local appsToCreate = { -- FORMATTED AS: Name (displayed on app button), BackgroundColor, ImageId (non working right now) (btw its pipe character or | as seperator betweeen properties)
     "Background|Light purple|noid", 
