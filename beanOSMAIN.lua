@@ -1,9 +1,9 @@
 local tscreen = GetPartFromPort(1, "TouchScreen")
 local keyb = GetPartFromPort(2, "Keyboard")
-local disk = GetPartFromPort(3, "Disk") -- KEY 'Background' IS BACKGROUND ID
+local disk = GetPartFromPort(3, "Disk") -- KEY Background IS BACKGROUND ID
 local modem = GetPartFromPort(4, "Modem")
 
-local BUILTINBACKGROUNDID = "http://www.roblox.com/asset/?id=9180622665" -- change this if you wanna make different background ids
+local BUILTINBACKGROUNDID = "http://www.roblox.com/asset/?id=9180622665"
 
 if disk:Read("Background") == nil then -- write built in if no background id
     disk:Write("Background", BUILTINBACKGROUNDID)
@@ -15,11 +15,12 @@ local appListframeHidden = false
 local appframeHidden = true
 local appcodetable = {}
 
-local VERSION = "beanOS beta 0.2"
+local VERSION = "0.2 BETA"
  
-local appsToCreate = { -- FORMATTED AS: Name (displayed on app button), BackgroundColor, ImageId (non working right now) (btw its pipe character or | as seperator betweeen properties)
+local appsToCreate = { -- FORMATTED AS: Name, BackgroundColor, ImageId (non working right now so just put "noid" as the value) (pipe character or | as seperator)
     "Background|Light purple|noid", 
-    "Lima|Wheat|noid", 
+    "Lima|Wheat|noid",
+    "Terminal|Earth green|noid", 
 }
 
 tscreen:ClearElements()
@@ -169,7 +170,7 @@ end
 
 
 
-appcodetable[1] = function() -- this god forsaken thing took like 2 hours to get running, and i am so happy that it finally works now
+appcodetable[1] = function() -- this entire god forsaken thing took me like 2 hours to get this part working and it probably wont even work when im finished (edit:) i forgor that you might have to unparent the frame when your done otherwise it shows it all
     if appframeHidden then -- INIT
         keyboardTEXTvariableFORbackground = ""
         showFrame()
@@ -263,7 +264,7 @@ appcodetable[2] = function()
         TextWrapped = true;
     })
 
-    modem:Connect("MessageSent", function(data) --  WHY DOES IT SEND 2 MESSAGES ON THE SENDER
+    modem:Connect("MessageSent", function(data)
         TextToSave = TextToSave .. data
         if messagebeingsent == false then
             ModemText:ChangeProperties({
@@ -325,7 +326,56 @@ appcodetable[2] = function()
     end
 end
 
+appcodetable[3] = function()
+    showFrame()
 
+    local terminalText = "beanOS terminal version: " .. VERSION
+
+    local terminalFrame = tscreen:CreateElement("ScrollingFrame", {
+        Position = UDim2.fromScale(0, 0);
+        Size = UDim2.fromScale(0.95, 0.95);
+        BackgroundColor = BrickColor.new("Really black");
+    })
+
+    local terminalText = tscreen:CreateElement("TextLabel", {
+        Position = UDim2.fromScale(0, 0);
+        Size = UDim2.fromScale(1, 1);
+        TextColor3 = Color3.new(0, 0.5, 0);
+        BackgroundColor = BrickColor.new("Really black");
+        Text = terminalText;
+        TextXAlignment = "Left";
+        TextYAlignment = "Top";
+        TextSize = 16;
+        TextWrapped = true;
+    })
+
+    keyb:Connect("TextInputted", function(text, player)
+        text = text:sub(1, -2)
+
+        local textarray = string.split(text, " ")
+
+        local cmd = textarray[1]
+        local args = textarray[2]
+        
+        terminalText = terminalText .. text
+
+        if cmd == "echo" then
+            terminalText = terminalText .. "\n" .. args
+        end
+
+        terminalText:ChangeProperties({
+            Text = terminalText;
+        })
+    end)
+
+    appFrame:AddChild(terminalFrame)
+    terminalFrame:AddChild(terminalText)
+
+    if appframeHidden == false then
+        terminalFrame:Destroy()
+        hideFrame()
+    end
+end
 
 
 ------------------------
@@ -345,6 +395,7 @@ local CLONINGAPP = tscreen:CreateElement("TextButton", {
     Position = UDim2.fromScale(1, 0);
     Size = UDim2.fromScale(1, 0.25);
     BackgroundColor = BrickColor.new("Bright red");
+    TextScaled = true;
 })
 
 for i = 1, #appsToCreate, 1 do
