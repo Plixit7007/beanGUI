@@ -1,4 +1,4 @@
-# beanOS
+# beanGUI
 More of a gui system than operating system, but still a thing for a roblox game called waste of space: https://www.roblox.com/games/4490046941/Waste-of-Space-ALPHA
 
 Add bugs and app ideas and app code in issues if you want
